@@ -1,0 +1,14 @@
+<phpunit bootstrap="bootstrap.php">
+    <testsuites>
+        <testsuite name="BreadShop">
+            <directory suffix="Test.php">test</directory>
+        </testsuite>
+    </testsuites>
+
+    <groups>
+        <exclude>
+            <group>ObjectiveA</group>
+            <group>ObjectiveB</group>
+        </exclude>
+    </groups>
+</phpunit>
