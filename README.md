@@ -51,6 +51,8 @@ in terms of them.
 
 It's also completely OK to pass non-primitive objects around, but all of their public methods must obey TDA.
 
+You can run the tests with `libs/phpunit-3.7.phar` on the command line from this directory.
+
 # Part Two: Choose your own adventure
 
 I recommend attempting objective A and then objective B.
