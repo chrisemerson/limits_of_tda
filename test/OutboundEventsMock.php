@@ -90,5 +90,11 @@ class OutboundEventsMock implements OutboundEvents
                 }
             }
         }
+
+        if (!empty($this->actualCalls)) {
+            throw new \PHPUnit_Framework_ExpectationFailedException(
+                "More calls were made to the object than expected"
+            );
+        }
     }
 }
