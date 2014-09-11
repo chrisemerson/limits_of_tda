@@ -5,7 +5,7 @@ use PHPUnit_Framework_TestCase;
 
 class BreadShopTest extends PHPUnit_Framework_TestCase
 {
-    /** @var OutboundEvents */
+    /** @var OutboundEventsMock */
     private $events;
 
     /** @var BreadShop */
@@ -18,13 +18,14 @@ class BreadShopTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->events = $this->getMock('Breadshop\OutboundEvents');
+        $this->events = new OutboundEventsMock();
         $this->breadShop = new Breadshop($this->events);
     }
 
     public function tearDown()
     {
         $this->breadShop = null;
+        $this->events->verify();
         $this->events = null;
     }
 
@@ -314,10 +315,7 @@ class BreadShopTest extends PHPUnit_Framework_TestCase
 
     private function expectOrderFilled($accountId, $orderId, $quantity)
     {
-        $this->events
-            ->expects($this->once())
-            ->method('orderFilled')
-            ->with($accountId, $orderId, $quantity);
+        $this->events->expects('orderFilled', array($accountId, $orderId, $quantity));
     }
 
     private function cancelOrder($accountId, $orderId, $expectedBalanceAfterCancel)
@@ -330,18 +328,12 @@ class BreadShopTest extends PHPUnit_Framework_TestCase
 
     private function expectOrderNotFound($orderId)
     {
-        $this->events
-            ->expects($this->once())
-            ->method('orderNotFound')
-            ->with(self::ACCOUNT_ID_ONE, $orderId);
+        $this->events->expects('orderNotFound', array(self::ACCOUNT_ID_ONE, $orderId));
     }
 
     private function expectOrderCancelled($accountId, $orderId)
     {
-        $this->events
-            ->expects($this->once())
-            ->method('orderCancelled')
-            ->with($accountId, $orderId);
+        $this->events->expects('orderCancelled', array($accountId, $orderId));
     }
 
     private function placeOrder($accountId, $orderId, $amount, $balanceBefore)
@@ -353,18 +345,12 @@ class BreadShopTest extends PHPUnit_Framework_TestCase
 
     private function expectOrderRejected($accountId)
     {
-        $this->events
-            ->expects($this->once())
-            ->method('orderRejected')
-            ->with($accountId);
+        $this->events->expects('orderRejected', array($accountId));
     }
 
     private function expectOrderPlaced($accountId, $amount)
     {
-        $this->events
-            ->expects($this->once())
-            ->method('orderPlaced')
-            ->with($accountId, $amount);
+        $this->events->expects('orderPlaced', array($accountId, $amount));
     }
 
     private function createAccountWithBalance($accountId, $initialBalance)
@@ -377,10 +363,7 @@ class BreadShopTest extends PHPUnit_Framework_TestCase
 
     private function expectAccountNotFound($accountId)
     {
-        $this->events
-            ->expects($this->once())
-            ->method('accountNotFound')
-            ->with($accountId);
+        $this->events->expects('accountNotFound', array($accountId));
     }
 
     private function createAccount($accountId)
@@ -392,18 +375,12 @@ class BreadShopTest extends PHPUnit_Framework_TestCase
 
     private function expectNewBalance($accountId, $newBalanceAmount)
     {
-        $this->events
-            ->expects($this->once())
-            ->method('newAccountBalance')
-            ->with($accountId, $newBalanceAmount);
+        $this->events->expects('newAccountBalance', array($accountId, $newBalanceAmount));
     }
 
     private function expectAccountCreationSuccess($accountId)
     {
-        $this->events
-            ->expects($this->once())
-            ->method('accountCreatedSuccessfully')
-            ->with($accountId);
+        $this->events->expects('accountCreatedSuccessfully', array($accountId));
     }
 
     private function createAccountAndPlaceOrder($accountId, $orderId, $amount)
@@ -415,9 +392,6 @@ class BreadShopTest extends PHPUnit_Framework_TestCase
 
     private function expectWholesaleOrder($quantity)
     {
-        $this->events
-            ->expects($this->once())
-            ->method('placeWholesaleOrder')
-            ->with($quantity);
+        $this->events->expects('placeWholesaleOrder', array($quantity));
     }
 }
