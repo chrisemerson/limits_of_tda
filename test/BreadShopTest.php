@@ -147,12 +147,12 @@ class BreadShopTest extends PHPUnit_Framework_TestCase
      */
     public function testWholesaleOrdersAreMadeForTheSumOfTheQuantitiesOfOutstandingOrdersInOneAccount()
     {
-        $this->expectWholesaleOrder(40 + 55);
-
         $balance = $this->cost(40 + 55);
         $this->createAccountWithBalance(self::ACCOUNT_ID_ONE, $balance);
         $this->placeOrder(self::ACCOUNT_ID_ONE, self::ORDER_ID_ONE, 40, $balance);
         $this->placeOrder(self::ACCOUNT_ID_ONE, self::ORDER_ID_TWO, 55, $balance - $this->cost(40));
+
+        $this->expectWholesaleOrder(40 + 55);
 
         $this->breadShop->placeWholesaleOrder();
     }
@@ -162,10 +162,10 @@ class BreadShopTest extends PHPUnit_Framework_TestCase
      */
     public function testWholesaleOrdersAreMadeForTheSumOfTheQuantitiesOfOutstandingOrdersAcrossAccounts()
     {
-        $this->expectWholesaleOrder(40 + 55);
-
         $this->createAccountAndPlaceOrder(self::ACCOUNT_ID_ONE, self::ORDER_ID_ONE, 40);
         $this->createAccountAndPlaceOrder(self::ACCOUNT_ID_TWO, self::ORDER_ID_TWO, 55);
+
+        $this->expectWholesaleOrder(40 + 55);
 
         $this->breadShop->placeWholesaleOrder();
     }
