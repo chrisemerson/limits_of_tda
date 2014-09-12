@@ -30,8 +30,10 @@ A given function call is TDA iff no information is returned to the caller from t
 
 This means, roughly:
 
-* No return types
-* No passing objects that have any functions with return types
+* No return types on public methods
+* No public properties on classes
+* No accessing static properties of other classes
+* No passing objects that have any public methods with return types
 * No circular call paths
 
 Handily, the existing code already has a TDA like external interface; all of `BreadShop`s public methods obey the rule,
