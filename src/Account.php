@@ -60,7 +60,9 @@ class Account
             }
         }
 
-        self::onWholesaleOrder($remainingQuantity, $accounts);
+        if (next($accounts)) {
+            self::onWholesaleOrder($remainingQuantity, $accounts);
+        }
     }
 
     public static function onWholesaleOrder($remainingQuantity, array $accounts)
