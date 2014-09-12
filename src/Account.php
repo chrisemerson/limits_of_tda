@@ -41,6 +41,35 @@ class Account
         }
     }
 
+    public function fillOrders($remainingQuantity, $accountID, array $accounts)
+    {
+        foreach ($this->orders as $orderID => $orderQuantity) {
+            if ($orderQuantity <= $remainingQuantity) {
+                $fillQuantity = $orderQuantity;
+            } else {
+                $fillQuantity = $remainingQuantity;
+            }
+
+            $remainingQuantity -= $fillQuantity;
+            $this->orders[$orderID] -= $fillQuantity;
+
+            $this->events->orderFilled($accountID, $orderID, $fillQuantity);
+
+            if ($this->orders[$orderID] == 0) {
+                unset($this->orders[$orderID]);
+            }
+        }
+
+        self::onWholesaleOrder($remainingQuantity, $accounts);
+    }
+
+    public static function onWholesaleOrder($remainingQuantity, array $accounts)
+    {
+        if (($accountID = key($accounts)) && ($account = current($accounts))) {
+            $account->fillOrders($remainingQuantity, $accountID, $accounts);
+        }
+    }
+
     public function cancelOrder($orderId, $accountId, $priceOfBread)
     {
         if (isset($this->orders[$orderId])) {

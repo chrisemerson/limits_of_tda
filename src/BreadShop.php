@@ -48,6 +48,6 @@ class BreadShop
 
     public function onWholesaleOrder($quantity)
     {
-        throw new BadMethodCallException("Implement me in Objective B");
+        $this->accountRepository->onWholesaleOrder($quantity);
     }
 }

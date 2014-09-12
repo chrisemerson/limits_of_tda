@@ -62,6 +62,11 @@ class AccountRepository
         $oqa->doneAccumulating();
     }
 
+    public function onWholesaleOrder($quantity)
+    {
+        Account::onWholesaleOrder($quantity, $this->accounts);
+    }
+
     /** @return Account */
     private function getAccount($accountId)
     {
