@@ -52,6 +52,16 @@ class AccountRepository
         }
     }
 
+    public function accumulateOrderQuantityTotals(OrderQuantityAccumulator $oqa)
+    {
+        foreach ($this->accounts as $account) {
+            /** @var Account $account */
+            $account->addOrderQuantity($oqa);
+        }
+
+        $oqa->doneAccumulating();
+    }
+
     /** @return Account */
     private function getAccount($accountId)
     {

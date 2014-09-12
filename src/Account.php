@@ -34,6 +34,13 @@ class Account
         }
     }
 
+    public function addOrderQuantity(OrderQuantityAccumulator $oqa)
+    {
+        foreach ($this->orders as $quantity) {
+            $oqa->addOrderQuantity($quantity);
+        }
+    }
+
     public function cancelOrder($orderId, $accountId, $priceOfBread)
     {
         if (isset($this->orders[$orderId])) {

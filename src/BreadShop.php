@@ -41,7 +41,9 @@ class BreadShop
 
     public function placeWholesaleOrder()
     {
-        throw new BadMethodCallException("Implement me in Objective A");
+        $orderAccumulator = new OrderQuantityAccumulator($this->events);
+
+        $this->accountRepository->accumulateOrderQuantityTotals($orderAccumulator);
     }
 
     public function onWholesaleOrder($quantity)
