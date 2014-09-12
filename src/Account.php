@@ -3,36 +3,48 @@ namespace Breadshop;
 
 class Account
 {
+    /** @var OutboundEvents */
+    private $events;
+
     private $balance = 0;
     private $orders = array();
 
-    public function getBalance()
+    public function __construct(OutboundEvents $events)
     {
-        return $this->balance;
+        $this->events = $events;
     }
 
-    /** @return int */
-    public function deposit($creditAmount)
+    public function deposit($creditAmount, $accountId)
     {
         $this->balance += $creditAmount;
-        return $this->balance;
+        $this->events->newAccountBalance($accountId, $this->balance);
     }
 
-    public function addOrder($orderId, $amount)
+    public function addOrder($orderId, $amount, $accountId, $priceOfBread)
     {
-        $this->orders[$orderId] = $amount;
+        $cost = $amount * $priceOfBread;
+
+        if ($this->balance >= $cost) {
+            $this->orders[$orderId] = $amount;
+            $this->events->orderPlaced($accountId, $amount);
+
+            $this->deposit(-$cost, $accountId);
+        } else {
+            $this->events->orderRejected($accountId);
+        }
     }
 
-    /** @return int */
-    public function cancelOrder($orderId)
+    public function cancelOrder($orderId, $accountId, $priceOfBread)
     {
         if (isset($this->orders[$orderId])) {
-            $amount = $this->orders[$orderId];
+            $cancelledQuantity = $this->orders[$orderId];
+
             unset($this->orders[$orderId]);
 
-            return $amount;
+            $this->events->orderCancelled($accountId, $orderId);
+            $this->deposit($cancelledQuantity * $priceOfBread, $accountId);
+        } else {
+            $this->events->orderNotFound($accountId, $orderId);
         }
-
-        return null;
     }
 }
