@@ -7,7 +7,6 @@
 
     <groups>
         <exclude>
-            <group>ObjectiveB</group>
         </exclude>
     </groups>
 </phpunit>
